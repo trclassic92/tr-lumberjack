@@ -58,7 +58,7 @@ If you are using Booya Nopixel styled phone to add the job feature go to **qb-ph
     [7] = {
         job = "lumberjack",
         label = "Logger",
-        Coords = {462.22, -641.15},
+        Coords = {1167.73, -1347.27},
     },
 ```
 
