@@ -1,10 +1,5 @@
 local QBCore = exports['qb-core']:GetCoreObject()
-local TR = PlayerPedId()
-local Classic = GetSelectedPedWeapon(TR)
-local plyCoords = GetOffsetFromEntityInWorldCoords(TR, 0, 0.6, 0)
-local TrCoords = GetEntityCoords(TR)
-local animDict = "melee@hatchet@streamed_core"
-local animName = "plyr_rear_takedown_b"
+local chopping = false
 
 RegisterNetEvent('tr-lumberjack:getLumberStage', function(stage, state, k)
     Config.TreeLocations[k][stage] = state
@@ -30,34 +25,35 @@ local function axe()
 end
 
 local function ChopLumber(k)
-    chopping = true
+    local animDict = "melee@hatchet@streamed_core"
+    local animName = "plyr_rear_takedown_b"
+    local trClassic = PlayerPedId()
     local choptime = LumberJob.ChoppingTreeTimer
+    chopping = true
     QBCore.Functions.Progressbar("Chopping_Tree", Config.Alerts["chopping_tree"], choptime, false, true, {
         disableMovement = true,
         disableCarMovement = true,
         disableMouse = false,
         disableCombat = true,
     }, {}, {}, {}, function()
-        ClearPedTasks(ped)
         TriggerServerEvent('tr-lumberjack:setLumberStage', "isChopped", true, k)
         TriggerServerEvent('tr-lumberjack:setLumberStage', "isOccupied", false, k)
         TriggerServerEvent('tr-lumberjack:recivelumber')
         TriggerServerEvent('tr-lumberjack:setChoppedTimer')
         chopping = false
-        TaskPlayAnim(TR, animDict, "exit", 3.0, 3.0, -1, 2, 0, 0, 0, 0)
+        TaskPlayAnim(trClassic, animDict, "exit", 3.0, 3.0, -1, 2, 0, 0, 0, 0)
     end, function()
-        ClearPedTasks(ped)
+        ClearPedTasks(trClassic)
         TriggerServerEvent('tr-lumberjack:setLumberStage', "isOccupied", false, k)
         chopping = false
-        TaskPlayAnim(TR, animDict, "exit", 3.0, 3.0, -1, 2, 0, 0, 0, 0)
+        TaskPlayAnim(trClassic, animDict, "exit", 3.0, 3.0, -1, 2, 0, 0, 0, 0)
     end)
     TriggerServerEvent('tr-lumberjack:setLumberStage', "isOccupied", true, k)
-
     CreateThread(function()
         while chopping do
             loadAnimDict(animDict)
-            TaskPlayAnim(TR, animDict, animName, 3.0, 3.0, -1, 2, 0, 0, 0, 0 )
-            Wait(2500)
+            TaskPlayAnim(trClassic, animDict, animName, 3.0, 3.0, -1, 2, 0, 0, 0, 0 )
+            Wait(3000)
         end
     end)
 end
@@ -251,6 +247,7 @@ end
 RegisterNetEvent('tr-lumberjack:vehicle', function()
     local vehicle = LumberDepo.Vehicle
     local coords = LumberDepo.VehicleCoords
+    local TR = PlayerPedId()
     RequestModel(vehicle)
     while not HasModelLoaded(vehicle) do
         Wait(0)
@@ -265,6 +262,7 @@ RegisterNetEvent('tr-lumberjack:vehicle', function()
         Wait(1500)
         SetNetworkIdCanMigrate(id, true)
         TaskWarpPedIntoVehicle(TR, JobVehicle, -1)
+        TriggerEvent("vehiclekeys:client:SetOwner", QBCore.Functions.GetPlate(JobVehicle))
         DoScreenFadeIn(1500)
         Wait(2000)
         TriggerServerEvent('qb-phone:server:sendNewMail', {
@@ -278,7 +276,8 @@ RegisterNetEvent('tr-lumberjack:vehicle', function()
 end)
 
 RegisterNetEvent('tr-lumberjack:removevehicle', function()
-    local vehicle = GetVehiclePedIsIn(TR,true)
+    local TR92 = PlayerPedId()
+    local vehicle = GetVehiclePedIsIn(TR92,true)
     DeleteVehicle(vehicle)
     QBCore.Functions.Notify(Config.Alerts["depo_stored"])
 end)
