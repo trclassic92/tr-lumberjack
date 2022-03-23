@@ -2,9 +2,9 @@ local QBCore = exports['qb-core']:GetCoreObject()
 local Chopped = false
 
 RegisterNetEvent('tr-lumberjack:sellItems', function()
-    local src = source
+    local source = source
     local price = 0
-    local Player = QBCore.Functions.GetPlayer(src)
+    local Player = QBCore.Functions.GetPlayer(source)
     if Player.PlayerData.items ~= nil and next(Player.PlayerData.items) ~= nil then
         for k, v in pairs(Player.PlayerData.items) do
             if Player.PlayerData.items[k] ~= nil then
@@ -16,9 +16,9 @@ RegisterNetEvent('tr-lumberjack:sellItems', function()
             end
         end
         Player.Functions.AddMoney("cash", price)
-        TriggerClientEvent('QBCore:Notify', src, Config.Alerts["successfully_sold"])
+        TriggerClientEvent('QBCore:Notify', source, Config.Alerts["successfully_sold"])
     else 
-		TriggerClientEvent('QBCore:Notify', src, Config.Alerts["error_sold"])
+		TriggerClientEvent('QBCore:Notify', source, Config.Alerts["error_sold"])
 	end
 end)
 
@@ -70,8 +70,8 @@ end)
 RegisterServerEvent('tr-lumberjack:recivelumber', function()
     local source = source
     local Player = QBCore.Functions.GetPlayer(tonumber(source))
-    local lumber = LumberJob.LumberAmount
-    local bark = LumberJob.TreeBark
+    local lumber = math.random(LumberJob.LumberAmount_Min, LumberJob.LumberAmount_Max)
+    local bark = math.random(LumberJob.TreeBarkAmount_Min, LumberJob.TreeBarkAmount_Max)
     Player.Functions.AddItem('tree_lumber', lumber)
     TriggerClientEvent('inventory:client:ItemBox', source, QBCore.Shared.Items['tree_lumber'], "add")
     Player.Functions.AddItem('tree_bark', bark)
@@ -93,6 +93,8 @@ RegisterServerEvent('tr-lumberjack:lumberprocessed', function()
     local source = source
     local Player = QBCore.Functions.GetPlayer(tonumber(source))
     local lumber = Player.Functions.GetItemByName('tree_lumber')
+    local TradeAmount = math.random(LumberJob.TradeAmount_Min, LumberJob.TradeAmount_Max)
+    local TradeRecevied = math.random(LumberJob.TradeRecevied_Min, LumberJob.TradeRecevied_Max)
     if not lumber then 
         TriggerClientEvent('QBCore:Notify', source, Config.Alerts['error_lumber'])
         return false
@@ -100,7 +102,7 @@ RegisterServerEvent('tr-lumberjack:lumberprocessed', function()
 
     local amount = lumber.amount
     if amount >= 1 then
-        amount = LumberJob.TradeAmount
+        amount = TradeAmount
     else
       return false
     end
@@ -111,9 +113,8 @@ RegisterServerEvent('tr-lumberjack:lumberprocessed', function()
     end
 
     TriggerClientEvent('inventory:client:ItemBox', source, QBCore.Shared.Items['tree_lumber'], "remove")
-    TriggerClientEvent('QBCore:Notify', source, Config.Alerts['lumber_processed'])
-    local amount = LumberJob.TradeReceived
+    TriggerClientEvent('QBCore:Notify', source, Config.Alerts["lumber_processed_trade"] ..TradeAmount.. Config.Alerts["lumber_processed_lumberamount"] ..TradeRecevied.. Config.Alerts["lumber_processed_received"])
     Wait(750)
-    Player.Functions.AddItem('wood_plank', amount)
+    Player.Functions.AddItem('wood_plank', TradeRecevied)
     TriggerClientEvent('inventory:client:ItemBox', source, QBCore.Shared.Items['wood_plank'], "add")
 end)

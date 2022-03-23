@@ -3,7 +3,7 @@ game 'gta5'
 
 author 'TRClassic#0001'
 description 'LumberJack Job For QB-Core'
-version '1.0.1'
+version '1.0.2'
 
 client_scripts {
     '@PolyZone/client.lua',

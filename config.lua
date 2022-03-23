@@ -44,12 +44,24 @@ LumberSeller = {
 }
 
 LumberJob = {
+    LumberModel = "s_m_y_construct_01",                             -- Ped model  https://wiki.rage.mp/index.php?title=Peds
+    LumberHash = 0xD7DA9E99,                                        -- Hash numbers for ped model
+    
     ChoppingTreeTimer = 12 * 1000,                                  -- 12 second timer
-    LumberAmount = math.random(2, 6),
-    TreeBark = math.random(1, 10),
     ProcessingTime = 10 * 1000,                                     -- 10 second timer
-    TradeAmount = math.random(3, 5),
-    TradeReceived = math.random(1, 3),
+
+    LumberAmount_Min = 2,
+    LumberAmount_Max = 6,
+
+    TreeBarkAmount_Min = 1,
+    TreeBarkAmount_Max = 10,
+
+    TradeAmount_Min = 3,
+    TradeAmount_Max = 6,
+
+    TradeRecevied_Min = 1,
+    TradeRecevied_Max = 3,
+
     AxePrice = 100,                                                 -- Axe Price ($100)
 }
 
@@ -243,7 +255,9 @@ Config.Alerts = {
     ['error_axe'] = 'You dont have a axe to chop the tree',
     ['lumber_progressbar'] = 'Trading lumber for wooden planks',
     ['itemamount'] = 'You are trying to process a amount that is invalid try again!',
-    ['lumber_processed'] = 'You successfully traded ' ..LumberJob.TradeAmount.. ' lumber for ' ..LumberJob.TradeReceived.. ' wooden planks',
+    ['lumber_processed_trade'] = 'You successfully traded ',
+    ['lumber_processed_lumberamount'] = ' Amount of Lumber for ',
+    ['lumber_processed_received'] = ' Piles of wooden panks',
     ['error_sold'] = 'You dont have the items to sell here!',
     ['successfully_sold'] = 'You have sold your items',
 
