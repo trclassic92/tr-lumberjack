@@ -30,6 +30,7 @@ local function ChopLumber(k)
     local trClassic = PlayerPedId()
     local choptime = LumberJob.ChoppingTreeTimer
     chopping = true
+    FreezeEntityPosition(trClassic, true)
     QBCore.Functions.Progressbar("Chopping_Tree", Config.Alerts["chopping_tree"], choptime, false, true, {
         disableMovement = true,
         disableCarMovement = true,
@@ -42,11 +43,13 @@ local function ChopLumber(k)
         TriggerServerEvent('tr-lumberjack:setChoppedTimer')
         chopping = false
         TaskPlayAnim(trClassic, animDict, "exit", 3.0, 3.0, -1, 2, 0, 0, 0, 0)
+        FreezeEntityPosition(trClassic, false)
     end, function()
         ClearPedTasks(trClassic)
         TriggerServerEvent('tr-lumberjack:setLumberStage', "isOccupied", false, k)
         chopping = false
         TaskPlayAnim(trClassic, animDict, "exit", 3.0, 3.0, -1, 2, 0, 0, 0, 0)
+        FreezeEntityPosition(trClassic, false)
     end)
     TriggerServerEvent('tr-lumberjack:setLumberStage', "isOccupied", true, k)
     CreateThread(function()
