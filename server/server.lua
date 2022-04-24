@@ -6,13 +6,15 @@ RegisterNetEvent('esx-lumberjack:sellItems', function()
     local xPlayer = ESX.GetPlayerFromId(source)
     for k,v in pairs(Config.Sell) do 
         local item = xPlayer.getInventoryItem(k)
-        if item.count >= 1 then
+        if item and item.count >= 1 then
             price = price + (v.price * item.count)
             xPlayer.removeInventoryItem(k, item.count)
         end
     end
-    xPlayer.addMoney(price)
-    xPlayer.showNotification(Config.Alerts["successfully_sold"], true, false, 140)
+    if price > 0 then
+        xPlayer.addMoney(price)
+        xPlayer.showNotification(Config.Alerts["successfully_sold"], true, false, 140)
+    end
 end)
 
 RegisterNetEvent('esx-lumberjack:BuyAxe', function()

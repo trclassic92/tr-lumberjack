@@ -169,7 +169,7 @@ if Config.Job then
         distance = 1.0
     })
     exports['qtarget']:AddBoxZone("LumberSeller", LumberSeller.targetZone, 1, 1, {
-        name = "LumberProcessor",
+        name = "LumberSeller",
         heading = LumberSeller.targetHeading,
         debugPoly = false,
         minZ = LumberSeller.minZ,
