@@ -68,10 +68,10 @@ RegisterServerEvent('esx-lumberjack:recivelumber', function()
     xPlayer.addInventoryItem('tree_bark', bark)
 end)
 
-QBCore.Functions.CreateCallback('esx-lumberjack:lumber', function(source, cb)
-    local Player = QBCore.Functions.GetPlayer(source)
-    if Player ~= nil then
-        if Player.Functions.GetItemByName("tree_lumber") ~= nil then
+ESX.RegisterServerCallback('esx-lumberjack:lumber', function(source, cb)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    if xPlayer then
+        if xPlayer.getInventoryItem("tree_lumber").count >= 1 then
             cb(true)
         else
             cb(false)
@@ -116,7 +116,7 @@ AddEventHandler('onResourceStart', function(resourceName)
     print("██╔═══  ██╔════╝╚██╗██╔╝ ██║     ██║   ██║████╗ ████║██╔══██╗██╔════╝██╔══██╗     ██║██╔══██╗██╔══██╗██║██╔╝ ")
     print("█████╗  ╚█████╗  ╚███╔╝  ██║     ██║   ██║██╔████╔██║██████╦╝█████╗  ██████╔╝     ██║███████║██║  ╚═╝█████═╝ ")
     print("██╔══╝   ╚═══██╗ ██╔██╗  ██║     ██║   ██║██║╚██╔╝██║██╔══██╗██╔══╝  ██╔══██╗██╗  ██║██╔══██║██║  ██╗██╔═██╗ ")
-    print("███████╗██████╔╝██╔╝╚██╗ ███████╗╚██████╔╝██║ ╚═╝ ██║██████╦╝███████╗██║  ██║╚█████╔╝██║  ██║╚█████╔╝██║ ╚██╗ ")
+    print("███████╗██████╔╝██╔╝╚██╗ ███████╗╚██████╔╝██║ ╚═╝ ██║██████╦╝███████╗██║  ██║╚█████╔╝██║  ██║╚█████╔╝██║ ╚██╗")
     print("╚══════╝╚═════╝ ╚═╝  ╚═╝ ╚══════╝ ╚═════╝ ╚═╝     ╚═╝╚═════╝ ╚══════╝╚═╝  ╚═╝ ╚════╝ ╚═╝  ╚═╝ ╚════╝ ╚═╝  ╚═╝ ")
     print("                            Converted By Mycroft (Manager of ESX-Framework)")
     print("                               Website: https://docs.esx-framework.org")

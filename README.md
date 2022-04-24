@@ -27,6 +27,7 @@ LumberJack Script for QBCore - Converted to ESX by Mycroft (Manager of ESX-Frame
 - [esx-legacy](https://docs.esx-framework.org)
 - [qtarget](https://github.com/overextended/qtarget/releases)
 - [PolyZone](https://github.com/mkafrin/PolyZone)
+- [mythic_progbar](https://github.com/HalCroves/mythic_progbar)
 
 ## Preview Pictures
 

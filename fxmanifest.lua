@@ -1,9 +1,9 @@
 fx_version 'cerulean'
 game 'gta5'
 
-author 'TRClassic#0001'
-description 'LumberJack Job For QB-Core'
-version '1.0.2'
+author 'TRClassic#0001, Mycroft, Benzo'
+description 'LumberJack Job For QB-Core, Converted to ESX'
+version '2.0.2'
 
 client_scripts {
     '@PolyZone/client.lua',
@@ -14,10 +14,11 @@ client_scripts {
 
 server_scripts {'server/*.lua'}
 
-shared_scripts {'config.lua'}
+shared_scripts {'@es_extended/imports.lua','config.lua'}
 
 dependencies {
     'PolyZone',
-    'qb-menu',
-    'qb-target'
+    'mythic_progbar',
+    'es_extended',
+    'qtarget'
 }

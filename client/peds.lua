@@ -1,4 +1,3 @@
-local QBCore = exports['qb-core']:GetCoreObject()
 local ClassicMan = LumberDepo.coords
 local LumberTR = LumberProcessor.coords
 local sellClassic = LumberSeller.coords
