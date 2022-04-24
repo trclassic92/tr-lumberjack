@@ -1,6 +1,6 @@
-local ClassicMan = LumberDepo.coords
-local LumberTR = LumberProcessor.coords
-local sellClassic = LumberSeller.coords
+local ClassicMan = Config.Blips.LumberDepo.coords
+local LumberTR = Config.Blips.LumberProcessor.coords
+local sellClassic = Config.Blips.LumberSeller.coords
 local ClassicPed = LumberJob.LumberModel
 local ClassicHash = LumberJob.LumberHash
 
