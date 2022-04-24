@@ -34,7 +34,6 @@ LumberJack Script for QBCore - Converted to ESX by Mycroft (Manager of ESX-Frame
 - [Youtube Video](https://youtu.be/DpmRvZUhPAo)
 ![Preview Screenshot](https://i.imgur.com/5ZC9RNo.jpeg)
 ![Preview Screenshot](https://i.imgur.com/2D3lOfG.png)
-![Preview Screenshot](https://i.imgur.com/mdv3wX6.png)
 ![Preview Screenshot](https://i.imgur.com/TghLZWz.jpeg)
 ![Preview Screenshot](https://i.imgur.com/vtHS9iP.jpeg)
 ![Preview Screenshot](https://i.imgur.com/tIWGi16.jpeg)
