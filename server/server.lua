@@ -5,15 +5,22 @@ RegisterNetEvent('esx-lumberjack:sellItems', function()
     local price = 0
     local xPlayer = ESX.GetPlayerFromId(source)
     for k,v in pairs(Config.Sell) do 
+        print(k)
+        print(v)
         local item = xPlayer.getInventoryItem(k)
         if item and item.count >= 1 then
-            price = price + (v.price * item.count)
+            print("count > 1")
+            price = price + (v * item.count)
+            print(price)
             xPlayer.removeInventoryItem(k, item.count)
         end
     end
     if price > 0 then
+        print(price)
         xPlayer.addMoney(price)
         xPlayer.showNotification(Config.Alerts["successfully_sold"], true, false, 140)
+    else
+        xPlayer.showNotification(Config.Alerts["no_item"])
     end
 end)
 
@@ -34,7 +41,7 @@ end)
 ESX.RegisterServerCallback('esx-lumberjack:axe', function(source, cb)
     local xPlayer = ESX.GetPlayerFromId(source)
     if xPlayer then
-        if xPlayer.getInventoryItem("weapon_battleaxe").count >= 1 then
+        if xPlayer.hasWeapon('WEAPON_BATTLEAXE') then
             cb(true)
         else
             cb(false)
@@ -120,7 +127,7 @@ AddEventHandler('onResourceStart', function(resourceName)
     print("██╔══╝   ╚═══██╗ ██╔██╗  ██║     ██║   ██║██║╚██╔╝██║██╔══██╗██╔══╝  ██╔══██╗██╗  ██║██╔══██║██║  ██╗██╔═██╗ ")
     print("███████╗██████╔╝██╔╝╚██╗ ███████╗╚██████╔╝██║ ╚═╝ ██║██████╦╝███████╗██║  ██║╚█████╔╝██║  ██║╚█████╔╝██║ ╚██╗")
     print("╚══════╝╚═════╝ ╚═╝  ╚═╝ ╚══════╝ ╚═════╝ ╚═╝     ╚═╝╚═════╝ ╚══════╝╚═╝  ╚═╝ ╚════╝ ╚═╝  ╚═╝ ╚════╝ ╚═╝  ╚═╝ ")
-    print("                            Converted By Mycroft (Manager of ESX-Framework)")
+    print("              Converted By Mycroft (Manager of ESX-Framework) & Benzo (Head Of ESX-Support)")
     print("                               Website: https://docs.esx-framework.org")
     print("                                TRClassic: https://dsc.gg/trclassic")
     print("                    Original Script: https://github.com/trclassic92/tr-lumberjack")
