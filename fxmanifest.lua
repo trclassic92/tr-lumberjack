@@ -21,3 +21,5 @@ dependencies {
     'qb-menu',
     'qb-target'
 }
+
+this_is_a_map 'yes'
