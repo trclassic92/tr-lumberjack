@@ -45,13 +45,6 @@ in **qb-cityhall/server/main.lua** add under Local AvailableJobs
 "lumberjack",
 ```
 
-Also add for **qb-cityhall/html/index.html** under <div class="job-page-blocks"> [Line - 37]
-
-```
-<div class="job-page-block" data-job="lumberjack"><p>Logger</p></div>
-
-```
-
 If you are using Booya Nopixel styled phone to add the job feature go to **qb-phone/config.lua  (Config.JobCenter)** [nopixel-style-phone](https://github.com/vBooya/qb-phone-npstyle)
 
 ```
