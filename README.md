@@ -80,7 +80,7 @@ Change LegacyFuel to whatever fuel system in **tr-lumberjack/client/main.lua Lin
 ![Preview Screenshot](https://i.imgur.com/I3oQ5wi.jpeg)
 
 ## Discord
-- [Join Discord](https://discord.gg/zRCdhENsHG)
+- [Join Discord](https://discord.gg/vTCUWCnQSD)
 
 ## Support
 - [Ko-fi Link](https://ko-fi.com/trclassic)
