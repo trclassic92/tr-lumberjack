@@ -808,7 +808,6 @@ RegisterNetEvent('tr-lumberjack:client:craftinginput', function(args)
         return
     end
 
-    -- Handle qbcore menu configuration
     if Config.menu == "qbcore" then
         local dialog = exports['qb-input']:ShowInput({
             header = string.format(Lang.choppedLogAmount, ChoppedLogs),
