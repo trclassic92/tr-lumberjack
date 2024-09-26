@@ -1,25 +1,75 @@
-local QBCore = exports['qb-core']:GetCoreObject()
-local ClassicMan = LumberDepo.coords
-local LumberTR = LumberProcessor.coords
-local sellClassic = LumberSeller.coords
-local ClassicPed = LumberJob.LumberModel
-local ClassicHash = LumberJob.LumberHash
+local TRClassic = Config.lumberDepo
+local ClassicTR = Config.deliveryTasker
+local Swiper = Config.craftingBench
+local classicSupervisorCoords = Config.deliverySuperPed
+local lumberModelHash = GetHashKey(Config.lumberModel)
+local constructionWorkerModel = GetHashKey(Config.lumberMillModel)
+local bingBong = Config.seller1
+local fuckYourLife = Config.seller2
+local benchModelHash = Config.craftingTable
+local benchProp = nil
 
-CreateThread(function()
-    RequestModel( GetHashKey( ClassicPed ) )
-    while ( not HasModelLoaded( GetHashKey( ClassicPed ) ) ) do
+local function LoadModel(modelHash)
+    RequestModel(modelHash)
+    while not HasModelLoaded(modelHash) do
         Wait(1)
     end
-    lumberjack1 = CreatePed(1, ClassicHash, ClassicMan, false, true)
-    lumberjack2 = CreatePed(1, ClassicHash, LumberTR, false, true)
-    lumberjack3 = CreatePed(1, ClassicHash, sellClassic, false, true)
-    SetEntityInvincible(lumberjack1, true)
-    SetBlockingOfNonTemporaryEvents(lumberjack1, true)
-    FreezeEntityPosition(lumberjack1, true)
-    SetEntityInvincible(lumberjack2, true)
-    SetBlockingOfNonTemporaryEvents(lumberjack2, true)
-    FreezeEntityPosition(lumberjack2, true)
-    SetEntityInvincible(lumberjack3, true)
-    SetBlockingOfNonTemporaryEvents(lumberjack3, true)
-    FreezeEntityPosition(lumberjack3, true)
+end
+
+local function CreateLumberPed(coords, isConstructionWorker)
+    local pedModel = isConstructionWorker and constructionWorkerModel or lumberModelHash
+    LoadModel(pedModel)
+
+    local ped = CreatePed(1, pedModel, coords, false, true)
+    SetEntityInvincible(ped, true)
+    SetBlockingOfNonTemporaryEvents(ped, true)
+    FreezeEntityPosition(ped, true)
+    return ped
+end
+
+local function CreateBenchProp(coords)
+    local modelHash = benchModelHash
+
+if not HasModelLoaded(modelHash) then
+    RequestModel(modelHash)
+    while not HasModelLoaded(modelHash) do
+        Wait(1)
+    end
+end
+
+local benchProp = CreateObject(modelHash, coords.x, coords.y, coords.z, false)
+    SetEntityHeading(benchProp, coords.w)
+    FreezeEntityPosition(benchProp, true)
+    return benchProp
+end
+
+local function DeleteBenchProp()
+    if benchProp and DoesEntityExist(benchProp) then
+        DeleteObject(benchProp)
+        benchProp = nil
+    end
+end
+
+CreateThread(function()
+    Wait(1000)
+    local lumberjack1 = CreateLumberPed(TRClassic, false)
+    local constructionWorker1 = CreateLumberPed(classicSupervisorCoords, true)
+    local constructionWorker2 = CreateLumberPed(ClassicTR, true)
+    local lumberjack2 = CreateLumberPed(bingBong, false)
+    local lumberjack3 = CreateLumberPed(fuckYourLife, false)
+
+    local benchCoords = Swiper
+    LoadModel(benchModelHash)
+
+    if HasModelLoaded(benchModelHash) then
+        CreateBenchProp(benchCoords)
+    else return end
+end)
+
+
+
+AddEventHandler('onResourceStop', function(resourceName)
+    if resourceName == GetCurrentResourceName() then
+        DeleteBenchProp()
+    end
 end)
