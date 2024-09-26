@@ -148,7 +148,7 @@ RegisterNetEvent('tr-lumberjack:client:workvan', function()
         DoScreenFadeIn(1500)
 
         PlayerWorkVans[playerId] = PlayerWorkVans[playerId] or {}
-        PlayerWorkVans[playerId][vanPlate] = { vehicle = JobVehicle, trailer = nil }  -- Store trailer reference as well
+        PlayerWorkVans[playerId][vanPlate] = { vehicle = JobVehicle, trailer = nil }
 
         RequestModel(trailer)
         if not IsModelInCdimage(trailer) or not IsModelAVehicle(trailer) then
@@ -170,7 +170,7 @@ RegisterNetEvent('tr-lumberjack:client:workvan', function()
         SetVehicleNumberPlateText(JobTrailer, trailerPlate)
         SetEntityAsMissionEntity(JobTrailer, true, true)
 
-        PlayerWorkVans[playerId][vanPlate].trailer = JobTrailer  -- Store trailer reference
+        PlayerWorkVans[playerId][vanPlate].trailer = JobTrailer
 
         SetNewWaypoint(waypointCoords2.x, waypointCoords2.y)
 
@@ -252,7 +252,6 @@ local function startCameraTask(targetPos, targetRot, dialogMessages)
                 NotifyPlayer(dialogMessages[2], 'primary')
                 Wait(3500)
 
-                -- Return camera to player
                 local returnStartTime = GetGameTimer()
                 while true do
                     local returnElapsedTime = GetGameTimer() - returnStartTime
