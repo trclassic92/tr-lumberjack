@@ -13,7 +13,7 @@ RegisterServerEvent('tr-lumberjack:server:workvan', function(workVanPrice)
     local source = source
     local Player = QBCore.Functions.GetPlayer(source)
 
-    if Player and Player.Functions.RemoveMoney('cash', workVanPrice) then
+    if Player and exports.ox_inventory:RemoveItem(source, 'cash', workVanPrice) then
         notifyPlayer(source, string.format(Lang.paidWorkVan, workVanPrice), 'success')
     end
 end)
@@ -23,7 +23,7 @@ RegisterServerEvent('tr-lumberjack:server:returnworkvan', function()
     local Player = QBCore.Functions.GetPlayer(source)
 
     if Player then
-        Player.Functions.AddMoney('cash', Config.returnPrice)
+        exports.ox_inventory:AddItem(source, 'cash', Config.returnPrice)
     end
 end)
 
@@ -38,7 +38,7 @@ RegisterServerEvent('tr-lumberjack:server:addLog', function()
         return
     end
 
-    Player.Functions.AddItem('tr_log', 1)
+    exports.ox_inventory:AddItem(source, 'tr_log', 1)
     notifyPlayer(source, Lang.addedLog, 'success')
 end)
 
@@ -47,7 +47,7 @@ RegisterServerEvent('tr-lumberjack:server:removeLog', function()
     local Player = QBCore.Functions.GetPlayer(source)
 
     if Player then
-        Player.Functions.RemoveItem('tr_log', 1)
+        exports.ox_inventory:RemoveItem(source, 'tr_log', 1)
     end
 end)
 
@@ -56,7 +56,7 @@ RegisterServerEvent('tr-lumberjack:server:deliverypaper', function()
     local Player = QBCore.Functions.GetPlayer(source)
 
     if Player then
-        Player.Functions.AddItem('tr_deliverypaper', 1)
+        exports.ox_inventory:AddItem(source, 'tr_deliverypaper', 1)
     end
 end)
 
@@ -73,13 +73,13 @@ RegisterServerEvent('tr-lumberjack:server:sellinglog', function()
         end
         playerLogSales[source] = playerLogSales[source] + 1
 
-        Player.Functions.RemoveItem('tr_log', 1)
-        Player.Functions.AddMoney('cash', cashReward)
+        exports.ox_inventory:RemoveItem(source, 'tr_log', 1)
+        exports.ox_inventory:AddItem(source, 'cash', cashReward)
 
         if playerLogSales[source] >= Config.maxLogs then
-            Player.Functions.RemoveItem('tr_deliverypaper', 1)
-            Wait(7)
-            TriggerClientEvent('tr-lumberjack:client:resetTimmyTask', source)
+            if exports.ox_inventory:RemoveItem(source, 'tr_deliverypaper', 1) then
+                TriggerClientEvent('tr-lumberjack:client:resetTimmyTask', source)
+            end
             playerLogSales[source] = 0
         end
 
@@ -89,12 +89,12 @@ end)
 
 RegisterServerEvent('tr-lumberjack:server:choptree', function()
     local source = source
-    local Player = QBCore.Functions.GetPlayer(source)
 
     -- Because you are going to be able to carry till your inventory is full (Don't ask why because Im stupid alright)
     if exports.ox_inventory:CanCarryItem(source, 'tr_choppedlog', 1) then
-        Player.Functions.AddItem('tr_choppedlog', 1)
-        notifyPlayer(source, Lang.chopAdded, 'success')
+        if exports.ox_inventory:AddItem(source, 'tr_choppedlog', 1) then
+            notifyPlayer(source, Lang.chopAdded, 'success')
+        end
     else
         notifyPlayer(source, Lang.carryingWeight, 'error')
     end
@@ -102,7 +102,6 @@ end)
 
 RegisterServerEvent('tr-lumberjack:server:craftinginput', function(argsNumber, logAmount)
     local source = source
-    local Player = QBCore.Functions.GetPlayer(source)
     local slot = tonumber(argsNumber)
     local itemCount = tonumber(logAmount)
 
@@ -135,9 +134,10 @@ RegisterServerEvent('tr-lumberjack:server:craftinginput', function(argsNumber, l
     end
 
     if exports.ox_inventory:CanCarryItem(source, itemToReceive, totalItems) then
-        Player.Functions.RemoveItem('tr_choppedlog', logAmount)
-        Wait(7)
-        Player.Functions.AddItem(itemToReceive, totalItems)
+        if exports.ox_inventory:RemoveItem(source, 'tr_choppedlog', 1) then
+            Wait(7)
+            exports.ox_inventroy:AddItem(source, itemToReceive, totalItems)
+        end
     else
         notifyPlayer(source, Lang.carryingWeight, 'error')
     end
@@ -148,7 +148,6 @@ end)
 
 RegisterServerEvent('tr-lumberjack:server:sellitem', function(args)
     local source = source
-    local Player = QBCore.Functions.GetPlayer(source)
     local itemCount = tonumber(args.number)
     local itemType = args.itemType
 
@@ -156,10 +155,9 @@ RegisterServerEvent('tr-lumberjack:server:sellitem', function(args)
         local sellPriceRange = Config.sell[itemType]
         if sellPriceRange then
             local sellPrice = math.random(sellPriceRange[1], sellPriceRange[2]) * itemCount
-            Player.Functions.AddMoney('cash', sellPrice)
-            Player.Functions.RemoveItem(itemType, itemCount)
-
-            notifyPlayer(source, string.format(Lang.soldItems, itemCount, sellPrice), 'success')
+            if exports.ox_inventory:AddItem(source, 'cash', sellPrice) and exports.ox_inventory:RemoveItem(source, itemType, itemCount) then
+                notifyPlayer(source, string.format(Lang.soldItems, itemCount, sellPrice), 'success')
+            end
         else
             notifyPlayer(source, Lang.invalidItem, 'error')
         end
