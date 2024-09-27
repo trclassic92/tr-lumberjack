@@ -65,6 +65,7 @@ Lang = {
     storedVehicle = "You have returned the work van.",
     addedLog = "You have picked up a log!",
     soldLog = "You sold a log for $%d!",
+    craftedItems = "Crafted %d %s.",
     -- Error Notifications
     vehicleToClose = "Vehicle Near By!",
     notEnoughCash = "Not enough cash!",
@@ -85,6 +86,13 @@ Lang = {
     alreadyChopped = "This tree has already been chopped",
     invalidNumber = "You must enter a valid amount of logs!",
     errorNoAxe = "Need to have an axe in hand",
+    tooFarFromCraftingBench = "To Far From Crafting Location",
+    tooFarFromSellPoint = "To Far From Selling Location",
+    tooFarFromDropOff = "To Far From Drop Off Location",
+    noLogsToSell = "No Logs To Sell",
+    tooFarFromTasker = "To Far From Timmy",
+    alreadyHaveDeliveryPaper = "Already Have Delivery Paper",
+    tooFarFromDepo = "To Far From Depo",
     -- Progress bar
     pickingLog = "Getting log ready for transport",
     loadingTrailer = "Loading Log onto trailer",

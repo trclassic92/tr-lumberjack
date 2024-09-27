@@ -47,6 +47,7 @@ Config.lumberDepo = vector4(1167.59, -1347.38, 33.915, 267.685)
 Config.deliverySuperPed = vector4(-606.472, 5311.273, 69.432, 255.341)
 Config.deliveryTasker = vector4(-841.132, 5401.732, 33.615, 305.278)
 Config.craftingBench = vector4(-556.287, 5326.222, 72.6, 160.741) --This is also the same as the Target.lua
+Config.deliverDropOff = vector3(1239.427, -3149.191, 5.528) -- Drop Off Location for delivery task
 Config.seller1 = vector4(906.558, -1514.62, 29.413, 178.657) -- First Sale point (Firewood and Planks)
 Config.seller2 = vector4(925.812, -1560.319, 29.74, 95.023) -- Second Sale point (Toys and handles)
 -- Camera Coords for NPC Diallog

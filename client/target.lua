@@ -36,7 +36,7 @@ local boxZones = {
     },
     {
         -- Delivery Dropoff
-        coords = vector3(1239.427, -3149.191, 5.528),
+        coords = Config.deliverDropOff,
         length = 5,
         width = 5,
         heading = 20.0,

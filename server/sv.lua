@@ -23,7 +23,20 @@ RegisterServerEvent('tr-lumberjack:server:returnworkvan', function()
     local Player = QBCore.Functions.GetPlayer(source)
 
     if Player then
-        exports.ox_inventory:AddItem(source, 'cash', Config.returnPrice)
+        local playerCoords = GetEntityCoords(GetPlayerPed(source))
+        local depoCoords = Config.lumberDepo
+
+        if #(playerCoords - depoCoords) > 10.0 then
+            notifyPlayer(source, Lang.tooFarFromDepo, 'error')
+            return
+        end
+        if exports.ox_inventory:AddItem(source, 'cash', Config.returnPrice) then
+            notifyPlayer(source, Lang.workVanReturned, 'success')
+        else
+            notifyPlayer(source, Lang.returnVanFailed, 'error')
+        end
+    else
+        notifyPlayer(source, Lang.invalidPlayer, 'error')
     end
 end)
 
@@ -56,15 +69,46 @@ RegisterServerEvent('tr-lumberjack:server:deliverypaper', function()
     local Player = QBCore.Functions.GetPlayer(source)
 
     if Player then
-        exports.ox_inventory:AddItem(source, 'tr_deliverypaper', 1)
+        local playerCoords = GetEntityCoords(GetPlayerPed(source))
+        local taskerCoords = Config.deliveryTasker
+        if #(playerCoords - taskerCoords) > 10.0 then
+            notifyPlayer(source, Lang.tooFarFromTasker, 'error')
+            return
+        end
+        if exports.ox_inventory:Search(source, 'count', 'tr_deliverypaper') > 0 then
+            notifyPlayer(source, Lang.alreadyHaveDeliveryPaper, 'error')
+            return
+        end
+
+        if exports.ox_inventory:AddItem(source, 'tr_deliverypaper', 1) then
+            notifyPlayer(source, Lang.receivedDeliveryPaper, 'success')
+        else
+            notifyPlayer(source, Lang.deliveryPaperFailed, 'error')
+        end
+    else
+        notifyPlayer(source, Lang.invalidPlayer, 'error')
     end
 end)
+
 
 RegisterServerEvent('tr-lumberjack:server:sellinglog', function()
     local source = source
     local Player = QBCore.Functions.GetPlayer(source)
 
     if Player then
+        local playerCoords = GetEntityCoords(GetPlayerPed(source))
+        local dropOffCoords = Config.deliverDropOff
+
+        if #(playerCoords - dropOffCoords) > 10.0 then
+            notifyPlayer(source, Lang.tooFarFromDropOff, 'error')
+            return
+        end
+
+        if exports.ox_inventory:Search(source, 'count', 'tr_log') < 1 then
+            notifyPlayer(source, Lang.noLogsToSell, 'error')
+            return
+        end
+
         local minSell, maxSell = table.unpack(Config.sell.deliveryPerLog)
         local cashReward = math.random(minSell, maxSell)
 
@@ -73,19 +117,24 @@ RegisterServerEvent('tr-lumberjack:server:sellinglog', function()
         end
         playerLogSales[source] = playerLogSales[source] + 1
 
-        exports.ox_inventory:RemoveItem(source, 'tr_log', 1)
-        exports.ox_inventory:AddItem(source, 'cash', cashReward)
+        if exports.ox_inventory:RemoveItem(source, 'tr_log', 1) then
+            exports.ox_inventory:AddItem(source, 'cash', cashReward)
 
-        if playerLogSales[source] >= Config.maxLogs then
-            if exports.ox_inventory:RemoveItem(source, 'tr_deliverypaper', 1) then
-                TriggerClientEvent('tr-lumberjack:client:resetTimmyTask', source)
+            if playerLogSales[source] >= Config.maxLogs then
+                if exports.ox_inventory:RemoveItem(source, 'tr_deliverypaper', 1) then
+                    TriggerClientEvent('tr-lumberjack:client:resetTimmyTask', source)
+                end
+                playerLogSales[source] = 0
             end
-            playerLogSales[source] = 0
+            notifyPlayer(source, string.format(Lang.soldLog, cashReward), 'success')
+        else
+            notifyPlayer(source, Lang.logRemovalFailed, 'error')
         end
-
-        notifyPlayer(source, string.format(Lang.soldLog, cashReward), 'success')
+    else
+        notifyPlayer(source, Lang.invalidPlayer, 'error')
     end
 end)
+
 
 RegisterServerEvent('tr-lumberjack:server:choptree', function()
     local source = source
@@ -104,11 +153,20 @@ RegisterServerEvent('tr-lumberjack:server:craftinginput', function(argsNumber, l
     local source = source
     local slot = tonumber(argsNumber)
     local itemCount = tonumber(logAmount)
+    local playerPed = GetPlayerPed(source)
+    local playerCoords = GetEntityCoords(playerPed)
+
+    local craftingBenchCoords = vector3(Config.craftingBench.x, Config.craftingBench.y, Config.craftingBench.z)
+    local distance = #(playerCoords - craftingBenchCoords)
+
+    if distance > 5.0 then
+        notifyPlayer(source, Lang.tooFarFromCraftingBench, 'error')
+        return
+    end
 
     if itemCount < 0 then
         if Config.debug then
-            print(itemCount)
-            print("Invalid item count.")
+            print("Invalid item count:", itemCount)
         end
         return
     end
@@ -129,7 +187,9 @@ RegisterServerEvent('tr-lumberjack:server:craftinginput', function(argsNumber, l
         itemToReceive = 'tr_toyset'
         totalItems = itemCount * Config.receive.tr_toyset
     else
-        print("Invalid crafting type.")
+        if Config.debug then
+            print("Invalid crafting type.")
+        end
         return
     end
 
@@ -137,19 +197,41 @@ RegisterServerEvent('tr-lumberjack:server:craftinginput', function(argsNumber, l
         if exports.ox_inventory:RemoveItem(source, 'tr_choppedlog', 1) then
             Wait(7)
             exports.ox_inventory:AddItem(source, itemToReceive, totalItems)
+            notifyPlayer(source, string.format(Lang.craftedItems, totalItems, itemToReceive), 'success')
+        else
+            notifyPlayer(source, Lang.noItemsToCraft, 'error')
         end
     else
         notifyPlayer(source, Lang.carryingWeight, 'error')
     end
+
     if Config.debug then
         print(string.format("Player %d crafted %d %s.", source, totalItems, itemToReceive))
     end
 end)
 
+
 RegisterServerEvent('tr-lumberjack:server:sellitem', function(args)
     local source = source
     local itemCount = tonumber(args.number)
     local itemType = args.itemType
+    local playerPed = GetPlayerPed(source)
+    local playerCoords = GetEntityCoords(playerPed)
+
+    local sellingLocation = nil
+    if itemType == 'tr_firewood' or itemType == 'tr_woodplank' then
+        sellingLocation = vector3(Config.seller1.x, Config.seller1.y, Config.seller1.z)
+    elseif itemType == 'tr_toyset' or itemType == 'tr_woodhandles' then
+        sellingLocation = vector3(Config.seller2.x, Config.seller2.y, Config.seller2.z)
+    else
+        notifyPlayer(source, Lang.invalidItem, 'error')
+        return
+    end
+
+    if #(playerCoords - sellingLocation) > 10 then
+        notifyPlayer(source, Lang.tooFarFromSellPoint, 'error')
+        return
+    end
 
     if itemCount > 0 then
         local sellPriceRange = Config.sell[itemType]
@@ -165,7 +247,6 @@ RegisterServerEvent('tr-lumberjack:server:sellitem', function(args)
         notifyPlayer(source, Lang.noItemsToSell, 'error')
     end
 end)
-
 
 AddEventHandler('onServerResourceStart', function(resourceName)
     if resourceName == 'ox_inventory' or resourceName == GetCurrentResourceName() then
