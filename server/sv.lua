@@ -136,7 +136,7 @@ RegisterServerEvent('tr-lumberjack:server:craftinginput', function(argsNumber, l
     if exports.ox_inventory:CanCarryItem(source, itemToReceive, totalItems) then
         if exports.ox_inventory:RemoveItem(source, 'tr_choppedlog', 1) then
             Wait(7)
-            exports.ox_inventroy:AddItem(source, itemToReceive, totalItems)
+            exports.ox_inventory:AddItem(source, itemToReceive, totalItems)
         end
     else
         notifyPlayer(source, Lang.carryingWeight, 'error')
