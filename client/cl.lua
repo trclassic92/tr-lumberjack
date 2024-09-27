@@ -60,7 +60,11 @@ RegisterNetEvent('tr-lumberjack:client:deliverytruck', function()
         SetVehicleNumberPlateText(JobVehicle, truckPlate)
         SetVehicleHasBeenOwnedByPlayer(JobVehicle, true)
         SetEntityAsMissionEntity(JobVehicle, true, true)
-        exports[Config.fuel]:SetFuel(JobVehicle, 100.0)
+        if Config.fuel == "ox" then
+            Entity(JobVehicle).state.fuel = 100.0
+        else
+            exports[Config.fuel]:SetFuel(JobVehicle, 100.0)
+        end
         local id = NetworkGetNetworkIdFromEntity(JobVehicle)
 
         DoScreenFadeOut(1500)
@@ -137,7 +141,11 @@ RegisterNetEvent('tr-lumberjack:client:workvan', function()
         SetVehicleNumberPlateText(JobVehicle, vanPlate)
         SetVehicleHasBeenOwnedByPlayer(JobVehicle, true)
         SetEntityAsMissionEntity(JobVehicle, true, true)
-        exports[Config.fuel]:SetFuel(JobVehicle, 100.0)
+        if Config.fuel == "ox" then
+            Entity(JobVehicle).state.fuel = 100.0
+        else
+            exports[Config.fuel]:SetFuel(JobVehicle, 100.0)
+        end
         local id = NetworkGetNetworkIdFromEntity(JobVehicle)
 
         DoScreenFadeOut(1500)

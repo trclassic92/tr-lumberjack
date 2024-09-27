@@ -12,7 +12,7 @@ Config.progress = "qbcore"  -- Options: qbcore, ox
 Config.menu = "qbcore"  -- Options: qbcore, ox
 
 -- Fuel System
-Config.fuel = "cdn-fuel" -- Export for fuel script
+Config.fuel = "cdn-fuel" -- Export for fuel script (if using ox just put "ox")
 
 -- Blips
 Config.useBlips = true  -- true = Enabled, false = Disabled
