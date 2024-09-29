@@ -33,21 +33,6 @@ if Config.menu == "qbcore" then
             },
         })
     end)
-    RegisterNetEvent('tr-lumberjack:client:deliverysuper', function()
-        if IsDeliveryTruckSelected then
-            exports['qb-menu']:openMenu({
-                {
-                    header = Lang.delivery1,
-                    icon = 'fa-solid fa-trailer',
-                    params = {
-                        event = 'tr-lumberjack:client:starttask',
-                    }
-                }
-            })
-        else
-            NotifyPlayer(Lang.selectDeliveryTruck, 'error')
-        end
-    end)
     RegisterNetEvent('tr-lumberjack:client:trailerInteract', function()
         exports['qb-menu']:openMenu({
             {
@@ -180,23 +165,6 @@ elseif Config.menu == "ox" then
             }
         })
         lib.showContext('lumberjack_depo')
-    end)
-    RegisterNetEvent('tr-lumberjack:client:deliverysuper', function()
-        if IsDeliveryTruckSelected then
-            lib.registerContext({
-                id = 'lumberjack_super',
-                title = Lang.interact2,
-                options = {
-                    {
-                        title = Lang.delivery1,
-                        event = 'tr-lumberjack:client:starttask',
-                    },
-                }
-            })
-            lib.showContext('lumberjack_super')
-        else
-            NotifyPlayer(Lang.selectDeliveryTruck, 'error')
-        end
     end)
     RegisterNetEvent('tr-lumberjack:client:trailerInteract', function()
         lib.registerContext({

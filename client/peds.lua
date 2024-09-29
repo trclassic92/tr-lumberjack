@@ -53,8 +53,8 @@ end
 CreateThread(function()
     Wait(1000)
     local lumberjack1 = CreateLumberPed(TRClassic, false)
-    local constructionWorker1 = CreateLumberPed(classicSupervisorCoords, true)
-    local constructionWorker2 = CreateLumberPed(ClassicTR, true)
+    ConstructionWorker1 = CreateLumberPed(classicSupervisorCoords, true)
+    ConstructionWorker2 = CreateLumberPed(ClassicTR, true)
     local lumberjack2 = CreateLumberPed(bingBong, false)
     local lumberjack3 = CreateLumberPed(fuckYourLife, false)
 

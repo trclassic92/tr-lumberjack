@@ -21,7 +21,7 @@ local boxZones = {
         name = 'zone2',
         label = Lang.interact2,
         icon = 'fa-solid fa-cogs',
-        event = 'tr-lumberjack:client:deliverysuper'
+        event = 'tr-lumberjack:client:starttask'
     },
     {
         -- Delivery Tasker

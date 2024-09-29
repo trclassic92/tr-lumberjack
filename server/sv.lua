@@ -24,16 +24,16 @@ RegisterServerEvent('tr-lumberjack:server:returnworkvan', function()
 
     if Player then
         local playerCoords = GetEntityCoords(GetPlayerPed(source))
-        local depoCoords = Config.lumberDepo
+        local depoCoords = vector3(Config.lumberDepo.x, Config.lumberDepo.y, Config.lumberDepo.z)
 
         if #(playerCoords - depoCoords) > 10.0 then
             notifyPlayer(source, Lang.tooFarFromDepo, 'error')
             return
         end
         if exports.ox_inventory:AddItem(source, 'cash', Config.returnPrice) then
-            notifyPlayer(source, Lang.workVanReturned, 'success')
+            notifyPlayer(source, Lang.storedVehicle, 'success')
         else
-            notifyPlayer(source, Lang.returnVanFailed, 'error')
+            notifyPlayer(source, Lang.incorrectVehicle, 'error')
         end
     else
         notifyPlayer(source, Lang.invalidPlayer, 'error')
@@ -70,18 +70,20 @@ RegisterServerEvent('tr-lumberjack:server:deliverypaper', function()
 
     if Player then
         local playerCoords = GetEntityCoords(GetPlayerPed(source))
-        local taskerCoords = Config.deliveryTasker
+        local taskerCoords = vector3(Config.deliveryTasker.x, Config.deliveryTasker.y, Config.deliveryTasker.z)
+
         if #(playerCoords - taskerCoords) > 10.0 then
             notifyPlayer(source, Lang.tooFarFromTasker, 'error')
             return
         end
+
         if exports.ox_inventory:Search(source, 'count', 'tr_deliverypaper') > 0 then
             notifyPlayer(source, Lang.alreadyHaveDeliveryPaper, 'error')
             return
         end
 
         if exports.ox_inventory:AddItem(source, 'tr_deliverypaper', 1) then
-            notifyPlayer(source, Lang.receivedDeliveryPaper, 'success')
+            notifyPlayer(source, Lang.timmyDialLog1, 'success')
         else
             notifyPlayer(source, Lang.deliveryPaperFailed, 'error')
         end
@@ -138,7 +140,6 @@ end)
 
 RegisterServerEvent('tr-lumberjack:server:choptree', function()
     local source = source
-
     -- Because you are going to be able to carry till your inventory is full (Don't ask why because Im stupid alright)
     if exports.ox_inventory:CanCarryItem(source, 'tr_choppedlog', 1) then
         if exports.ox_inventory:AddItem(source, 'tr_choppedlog', 1) then

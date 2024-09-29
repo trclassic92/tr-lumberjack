@@ -2,8 +2,6 @@ local QBCore = exports['qb-core']:GetCoreObject()
 local PlayerWorkVans = {}
 local waypointCoords = vector3(-603.707, 5305.513, 70.331)
 local waypointCoords2 = vector(-555.627, 5314.729, 74.302)
-local cameraCoords = Config.deliverySupervisorCam
-local timmyCoords = Config.deliveryTaskerCam
 local logPropModel = GetHashKey("prop_logpile_03")
 local logPropEntity = nil
 local outlineColor = Config.outLine
@@ -230,91 +228,64 @@ RegisterNetEvent('tr-lumberjack:client:returnworkvan', function()
     end
 end)
 
-
-local function startCameraTask(targetPos, targetRot, dialogMessages)
-    local player = PlayerPedId()
-    local playerPos = GetEntityCoords(player)
-    local cam = CreateCam("DEFAULT_SCRIPTED_CAMERA", true)
-    local transitionDuration = Config.camTransition * 1000
-    local startTime = GetGameTimer()
-    local initialCamPos = vector3(playerPos.x, playerPos.y, playerPos.z + 0.5)
-
-    SetCamCoord(cam, initialCamPos.x, initialCamPos.y, initialCamPos.z)
-    SetCamRot(cam, GetGameplayCamRot(0).x, GetGameplayCamRot(0).y, GetGameplayCamRot(0).z, 2)
-    SetCamActive(cam, true)
-    RenderScriptCams(true, false, 0, true, true)
-
-    CreateThread(function()
-        while true do
-            local elapsedTime = GetGameTimer() - startTime
-            local progress = math.min(elapsedTime / transitionDuration, 1.0)
-            local newPos = CamVector(initialCamPos, targetPos, progress)
-            local newRot = CamVector(GetGameplayCamRot(0), targetRot, progress)
-
-            SetCamCoord(cam, newPos.x, newPos.y, newPos.z)
-            SetCamRot(cam, newRot.x, newRot.y, newRot.z, 2)
-
-            if progress >= 1.0 then
-                NotifyPlayer(dialogMessages[1], 'primary')
-                Wait(2500)
-                NotifyPlayer(dialogMessages[2], 'primary')
-                Wait(3500)
-
-                local returnStartTime = GetGameTimer()
-                while true do
-                    local returnElapsedTime = GetGameTimer() - returnStartTime
-                    local returnProgress = math.min(returnElapsedTime / transitionDuration, 1.0)
-                    local returnPos = CamVector(targetPos, initialCamPos, returnProgress)
-                    local returnRot = CamVector(targetRot, GetGameplayCamRot(0), returnProgress)
-
-                    SetCamCoord(cam, returnPos.x, returnPos.y, returnPos.z)
-                    SetCamRot(cam, returnRot.x, returnRot.y, returnRot.z, 2)
-
-                    if returnProgress >= 1.0 then
-                        break
-                    end
-
-                    Wait(0)
-                end
-                RenderScriptCams(false, false, 0, true, true)
-                DestroyCam(cam, false)
-                Wait(2000)
-                if TaskInProgress and not timmyTaskStarted then
-                    SetNewWaypoint(-815.161, 5425.259)
-                    NotifyPlayer(dialogMessages[3], 'success')
-                else
-                    TriggerServerEvent('tr-lumberjack:server:deliverypaper')
-                    SetNewWaypoint(1239.432, -3148.982)
-                    NotifyPlayer(dialogMessages[3], 'success')
-                end
-                break
-            end
-
-            Wait(7)
-        end
-    end)
-end
-
 RegisterNetEvent('tr-lumberjack:client:starttask', function()
-    if TaskInProgress then
-        NotifyPlayer(Lang.alreadyTasked1, 'error')
-        return
+    if IsDeliveryTruckSelected then
+        if TaskInProgress then
+            NotifyPlayer(Lang.alreadyTasked1, 'error')
+            return
+        end
+        exports.mt_lib:showDialogue({
+            ped = ConstructionWorker1,
+            label = 'Larry',
+            speech = Lang.dialLog1,
+            options = {
+                {
+                    id = 'lumber_accepttask',
+                    label = Lang.dialLog2,
+                    icon = 'hand',
+                    close = true,
+                    action = function()
+                        SetNewWaypoint(-815.161, 5425.259)
+                    end
+                },
+            }
+        })
+        TaskInProgress = true
+        Wait(5000)
+        NotifyPlayer(Lang.dialLog3, 'success')
+        Wait(5000)
+        NotifyPlayer(Lang.dialLog4, 'success')
+    else
+        NotifyPlayer(Lang.selectDeliveryTruck, 'error')
     end
-    TaskInProgress = true
-    startCameraTask(vector3(cameraCoords.x, cameraCoords.y, cameraCoords.z), vector3(0.0, 0.0, cameraCoords.w), {Lang.dialLog1, Lang.dialLog2, Lang.dialLog3})
 end)
 
 RegisterNetEvent('tr-lumberjack:client:timmytask', function()
-    if not TrailerFull then
-        NotifyPlayer(Lang.timmyTask, 'error')
-        return
-    end
-    if timmyTaskStarted then
-        NotifyPlayer(Lang.timmyTask, 'error')
-        return
-    end
-    timmyTaskStarted = true
-    startCameraTask(vector3(Config.deliveryTaskerCam.x, Config.deliveryTaskerCam.y, Config.deliveryTaskerCam.z), vector3(0.0, 0.0, Config.deliveryTaskerCam.w), {Lang.timmyDialLog1, Lang.timmyDialLog2, Lang.timmyDialLog3})
+    exports.mt_lib:showDialogue({
+        ped = ConstructionWorker2,
+        label = 'Timmy',
+        speech = Lang.timmyTask1,
+        options = {
+            {
+                id = 'lumber_acceptdelivery',
+                label = Lang.timmyTask2,
+                icon = 'hand',
+                close = true,
+                action = function()
+                    if TrailerFull then
+                        NotifyPlayer(Lang.timmyTask, 'error')
+                        return
+                    end
+                    if timmyTaskStarted then
+                        NotifyPlayer(Lang.timmyTask, 'error')
+                        return
+                    end
+                    TriggerServerEvent('tr-lumberjack:server:deliverypaper')
+                    SetNewWaypoint(1239.432, -3148.982)
+                end
+            },
+        }
+    })
 end)
 
 function CamVector(startVec, endVec, t)

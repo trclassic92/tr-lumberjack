@@ -27,13 +27,13 @@ Lang = {
     depoInvoice = "Contact",
     depoMessage = "", -- Not used
     -- NPC
-    dialLog1 = "Larry: Hello! I have a task for you.",
-    dialLog2 = "Larry: Please collect some logs at the waypoint we added to your GPS!",
+    dialLog1 = "Hello! I have a task for you.",
+    dialLog2 = "Accept Task",
     dialLog3 = "Task: Go to the marked location to collect logs.",
     dialLog4 = "Task: Drive the truck with the Flatbed to load logs onto it",
-    timmyDialLog1 = "Timmy: Got the paper work your trailer is put together",
-    timmyDialLog2 = "Timmy: I will be sending you a ping of a delivery point",
-    timmyDialLog3 = "Ping has been applied to your GPS",
+    timmyTask1 = "Grab A Delivery Form",
+    timmyTask2 = "Request Delivery",
+    timmyDialLog1 = "Ping has been applied to your GPS",
     -- Task Areas
     task1 = "Collect Logs",
     task2 = "Loaded log onto the trailer!",
@@ -93,6 +93,7 @@ Lang = {
     tooFarFromTasker = "To Far From Timmy",
     alreadyHaveDeliveryPaper = "Already Have Delivery Paper",
     tooFarFromDepo = "To Far From Depo",
+    deliveryPaperFailed = "Couldn't Hand Over A Delivery Paper",
     -- Progress bar
     pickingLog = "Getting log ready for transport",
     loadingTrailer = "Loading Log onto trailer",
@@ -105,5 +106,6 @@ Lang = {
     -- Debug
     debug1 = "Ground log prop deleted upon re-picking the log.",
     debug2 = "Ground log prop deleted after 5 minutes.",
+    invalidPlayer = "Invalid",
 
 }
