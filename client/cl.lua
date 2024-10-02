@@ -272,7 +272,7 @@ RegisterNetEvent('tr-lumberjack:client:timmytask', function()
                 icon = 'hand',
                 close = true,
                 action = function()
-                    if TrailerFull then
+                    if not TrailerFull then
                         NotifyPlayer(Lang.timmyTask, 'error')
                         return
                     end
