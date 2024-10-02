@@ -281,6 +281,7 @@ RegisterNetEvent('tr-lumberjack:client:timmytask', function()
                 close = true,
                 action = function()
                     TriggerServerEvent('tr-lumberjack:server:deliverypaper')
+					timmyTaskStarted = true
                     SetNewWaypoint(1239.432, -3148.982)
                 end
             },
