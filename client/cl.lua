@@ -261,6 +261,14 @@ RegisterNetEvent('tr-lumberjack:client:starttask', function()
 end)
 
 RegisterNetEvent('tr-lumberjack:client:timmytask', function()
+    if not TrailerFull then
+        NotifyPlayer(Lang.timmyTask, 'error')
+        return
+    end
+    if timmyTaskStarted then
+        NotifyPlayer(Lang.timmyTask, 'error')
+        return
+    end
     exports.mt_lib:showDialogue({
         ped = ConstructionWorker2,
         label = 'Timmy',
@@ -272,14 +280,6 @@ RegisterNetEvent('tr-lumberjack:client:timmytask', function()
                 icon = 'hand',
                 close = true,
                 action = function()
-                    if not TrailerFull then
-                        NotifyPlayer(Lang.timmyTask, 'error')
-                        return
-                    end
-                    if timmyTaskStarted then
-                        NotifyPlayer(Lang.timmyTask, 'error')
-                        return
-                    end
                     TriggerServerEvent('tr-lumberjack:server:deliverypaper')
                     SetNewWaypoint(1239.432, -3148.982)
                 end
