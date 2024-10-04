@@ -487,6 +487,13 @@ local function unloadLogFromTrailer(trailer, playerPed)
     NotifyPlayer(Lang.noLog, 'error')
 end
 
+local function checkTrailerFull()
+    if #loadedLogs >= maxLogs then
+        TrailerFull = true
+        NotifyPlayer(Lang.trailerFull, 'error')
+    end
+end
+
 RegisterNetEvent('tr-lumberjack:client:loadtrailer', function()
     local playerPed = PlayerPedId()
 
@@ -537,6 +544,7 @@ RegisterNetEvent('tr-lumberjack:client:loadtrailer', function()
             disableCombat = true
         }, {}, {}, {}, function()
             loadLogOntoTrailer(trailer, trailerBone, nextPositionID, playerPed)
+            checkTrailerFull()
         end, function()
             NotifyPlayer(Lang.cancelledProgress, 'error')
         end)
@@ -549,6 +557,7 @@ RegisterNetEvent('tr-lumberjack:client:loadtrailer', function()
             disable = { move = true }
         }) then
             loadLogOntoTrailer(trailer, trailerBone, nextPositionID, playerPed)
+            checkTrailerFull()
         else
             NotifyPlayer(Lang.cancelledProgress, 'error')
         end
