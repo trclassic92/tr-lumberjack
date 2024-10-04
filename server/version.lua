@@ -1,5 +1,5 @@
 local function CheckVersion()
-    PerformHttpRequest('https://raw.githubusercontent.com/trclassic92/UpdateVerisons/master/tr-lumberjack.txt', function(err, newestVersion, headers)
+    PerformHttpRequest('https://raw.githubusercontent.com/trclassic92/UpdateVersions/master/tr-lumberjack.txt', function(err, newestVersion, headers)
     	local currentVersion = GetResourceMetadata(GetCurrentResourceName(), 'version')
         local resourcename = GetCurrentResourceName()
         local howto = "Update Here https://github.com/trclassic92/tr-lumberjack"
