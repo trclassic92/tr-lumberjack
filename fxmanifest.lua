@@ -3,7 +3,7 @@ game 'gta5'
 
 author 'TRClassic'
 description 'LumberJack Job For QB-Core / Ox'
-version '2.0.3'
+version '2.0.4'
 
 shared_scripts {
 	'lang/en.lua',
