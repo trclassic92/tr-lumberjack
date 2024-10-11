@@ -31,6 +31,13 @@ if Config.menu == "qbcore" then
                     event = 'tr-lumberjack:client:returnworkvan',
                 }
             },
+            {
+                header = Lang.depo5,
+                icon = 'fa-solid fa-car',
+                params = {
+                    event = 'tr-lumberjack:client:returndeliverytruck',
+                }
+            },
         })
     end)
     RegisterNetEvent('tr-lumberjack:client:trailerInteract', function()
@@ -161,6 +168,14 @@ elseif Config.menu == "ox" then
                 {
                     title = Lang.depo3,
                     event = 'tr-lumberjack:client:contractorshop',
+                },
+                {
+                    title = Lang.depo4,
+                    event = 'tr-lumberjack:client:returnworkvan',
+                },
+                {
+                    title = Lang.depo5,
+                    event = 'tr-lumberjack:client:returndeliverytruck',
                 },
             }
         })

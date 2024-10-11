@@ -17,6 +17,7 @@ Lang = {
     depo2 = "Work Van ($%d Work Vehicle)",
     depo3 = "Contract Shop",
     depo4 = "Return Work Vehicle",
+    depo5 = "Return Truck / Trailer",
     -- DeliveryTruck
     delivery1 = "Start Task",
     delivery2 = "Load Trailer",
@@ -63,11 +64,13 @@ Lang = {
     -- Success Notifications
     paidWorkVan = "You have paid $%d for the work van.",
     storedVehicle = "You have returned the work van.",
+    storeTruck = "Truck and Trailer returned",
     addedLog = "You have picked up a log!",
     soldLog = "You sold a log for $%d!",
     craftedItems = "Crafted %d %s.",
     -- Error Notifications
     vehicleToClose = "Vehicle Near By!",
+    trailerNotClose = "No Trailer Near By!",
     notEnoughCash = "Not enough cash!",
     incorrectVehicle = "No vehicle or incorrect vehicle being returned!",
     selectDeliveryTruck = "You must select a delivery truck first!",
@@ -94,6 +97,7 @@ Lang = {
     alreadyHaveDeliveryPaper = "Already Have Delivery Paper",
     tooFarFromDepo = "To Far From Depo",
     deliveryPaperFailed = "Couldn't Hand Over A Delivery Paper",
+    noDeliveryVehicle = "No Delivery Truck",
     -- Progress bar
     pickingLog = "Getting log ready for transport",
     loadingTrailer = "Loading Log onto trailer",

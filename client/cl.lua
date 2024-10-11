@@ -1,5 +1,6 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 local PlayerWorkVans = {}
+local PlayerDeliveryVehicles = {}
 local waypointCoords = vector3(-603.707, 5305.513, 70.331)
 local waypointCoords2 = vector(-555.627, 5314.729, 74.302)
 local logPropModel = GetHashKey("prop_logpile_03")
@@ -41,6 +42,7 @@ RegisterNetEvent('tr-lumberjack:client:deliverytruck', function()
     local coords = Config.deliverySpawn
     local player = PlayerPedId()
     local playerData = QBCore.Functions.GetPlayerData()
+    local citizenid = playerData.citizenid
     local lastname = playerData.charinfo.lastname
 
     local function GeneratePlate()
@@ -63,6 +65,7 @@ RegisterNetEvent('tr-lumberjack:client:deliverytruck', function()
         else
             exports[Config.fuel]:SetFuel(JobVehicle, 100.0)
         end
+
         local id = NetworkGetNetworkIdFromEntity(JobVehicle)
 
         DoScreenFadeOut(1500)
@@ -70,7 +73,6 @@ RegisterNetEvent('tr-lumberjack:client:deliverytruck', function()
         SetNetworkIdCanMigrate(id, true)
         TaskWarpPedIntoVehicle(player, JobVehicle, -1)
         TriggerEvent("vehiclekeys:client:SetOwner", truckPlate)
-        DoScreenFadeIn(1500)
 
         SetNewWaypoint(waypointCoords.x, waypointCoords.y)
         IsDeliveryTruckSelected = true
@@ -79,18 +81,23 @@ RegisterNetEvent('tr-lumberjack:client:deliverytruck', function()
         while not HasModelLoaded(trailer) do Wait(0) end
 
         local heading = GetEntityHeading(JobVehicle)
-
-        -- Calculate offsets for behind and to the left
-        local offsetX = -5.0 * math.cos(math.rad(heading)) + 3.0 * math.sin(math.rad(heading)) -- Negative for behind, positive for left
+        local offsetX = -5.0 * math.cos(math.rad(heading)) + 3.0 * math.sin(math.rad(heading))
         local offsetY = -5.0 * math.sin(math.rad(heading)) - 3.0 * math.cos(math.rad(heading))
-
         local trailerCoords = vector3(coords.x + offsetX, coords.y + offsetY, coords.z)
         local JobTrailer = CreateVehicle(trailer, trailerCoords, heading, true, false)
         local trailerPlate = GeneratePlate()
         SetVehicleNumberPlateText(JobTrailer, trailerPlate)
         SetEntityAsMissionEntity(JobTrailer, true, true)
 
-        Wait(2000)
+        DoScreenFadeIn(1500)
+
+        PlayerDeliveryVehicles[citizenid] = {
+            truck = JobVehicle,
+            truckPlate = truckPlate,
+            trailer = JobTrailer,
+            trailerPlate = trailerPlate
+        }
+
         local depoMessage = string.format(
             "Hello %s,\n\nYour delivery truck License Plate (%s) and flatbed trailer License Plate (%s) have been successfully loaned. Please proceed to the lumbermill in Paleto for your next task.\n\nThank you!",
             lastname, truckPlate, trailerPlate
@@ -223,6 +230,42 @@ RegisterNetEvent('tr-lumberjack:client:returnworkvan', function()
         TriggerServerEvent('tr-lumberjack:server:returnworkvan')
         DeleteVehicle(vehicle)
         NotifyPlayer(Lang.storedVehicle, 'success')
+    else
+        NotifyPlayer(Lang.incorrectVehicle, 'error')
+    end
+end)
+
+RegisterNetEvent('tr-lumberjack:client:returndeliverytruck', function()
+    local playerPed = PlayerPedId()
+    local playerData = QBCore.Functions.GetPlayerData()
+    local citizenid = playerData.citizenid
+
+    if not PlayerDeliveryVehicles[citizenid] then
+        NotifyPlayer(Lang.noDeliveryVehicle, 'error')
+        return
+    end
+
+    local vehicle = GetVehiclePedIsIn(playerPed, true)
+    local plate = GetVehicleNumberPlateText(vehicle)
+    local deliveryData = PlayerDeliveryVehicles[citizenid]
+
+    if deliveryData.truck and plate == deliveryData.truckPlate then
+        if deliveryData.trailer then
+            local trailerCoords = GetEntityCoords(deliveryData.trailer)
+            local playerCoords = GetEntityCoords(playerPed)
+            if #(playerCoords - trailerCoords) <= 20.0 then
+                DeleteVehicle(deliveryData.truck)
+                DeleteVehicle(deliveryData.trailer)
+                PlayerDeliveryVehicles[citizenid] = nil
+                NotifyPlayer(Lang.storeTruck, 'success')
+            else
+                NotifyPlayer(Lang.trailerNotClose, 'error')
+            end
+        else
+            DeleteVehicle(deliveryData.truck)
+            PlayerDeliveryVehicles[citizenid] = nil
+            NotifyPlayer(Lang.storeTruck, 'success')
+        end
     else
         NotifyPlayer(Lang.incorrectVehicle, 'error')
     end
